@@ -107,16 +107,19 @@ def logout(request):
 
 def welcome(request, user_id=None):
     if request.method == "GET":
-        p = get_object_or_404(Participant, pk=user_id)
         h = get_object_or_404(ModuleHeading, module_name='home')
-
-        request.session['user_id'] = user_id
         r = {
-            'heading': format_html(h.heading_content),
-            'name': str(p),
+            'heading': format_html(h.heading_content)
         }
 
+        if user_id:
+            p = get_object_or_404(Participant, pk=user_id)
+
+            request.session['user_id'] = user_id
+            r['name'] = str(p)
+
         return render(request, 'dc/welcome.html', r)
+
 
     elif request.method == "POST":
         if 'user_id' in request.session:

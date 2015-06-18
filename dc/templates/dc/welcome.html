@@ -8,6 +8,7 @@
 {{ heading }}
 <br/>
 
+{% if name %}
 Welcome {{ name }}. Please log in with the provided password.
 
 <form action="{% url 'dc:welcome' %}" method="POST">
@@ -20,7 +21,7 @@ Welcome {{ name }}. Please log in with the provided password.
     </div>
     <button type="submit" class="btn btn-primary">Go</button>
 </form>
-
+{% endif %}
 
 
 {% endblock %}
