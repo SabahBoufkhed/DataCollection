@@ -34,10 +34,10 @@ class ModuleHeadingAdmin(admin.ModelAdmin):
     fields = ('module_name', 'heading_content')
     readonly_fields = ('module_name',)
 
-    actions = None
+    #actions = None
 
-    def has_add_permission(self, request):
-        return False
+    #def has_add_permission(self, request):
+    #    return False
 
 admin.site.register(ParticipantStatement, ParticipantStatementAdmin)
 
