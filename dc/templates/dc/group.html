@@ -1,0 +1,70 @@
+{% extends "dc/base.html" %}
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<meta charset="utf-8">-->
+<!--<title>Data Collection</title>-->
+<!--{% load staticfiles %}-->
+
+<!--&lt;!&ndash; AngularJS &ndash;&gt;-->
+<!--<script src="{% static 'dc/js/angular.min.js' %}"></script>-->
+
+<!--&lt;!&ndash; Sortable.js &ndash;&gt;-->
+<!--<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>-->
+<!--&lt;!&ndash;<script src="{% static 'dc/js/Sortable.min.js' %}"></script>&ndash;&gt;-->
+<!--<script src="{% static 'dc/js/ng-sortable.js' %}"></script>-->
+
+<!--<link rel="stylesheet" href="{% static 'dc/css/styles.css' %}" type="text/css"/>-->
+<!--</style>-->
+
+
+{% block content %}
+
+
+{{ heading }}
+<br/>
+
+<div ng-app="groupingApp" ng-controller="groupingController">
+    <link rel="stylesheet" href="{% static 'dc/css/styles.css' %}" type="text/css"/>
+
+    <script>
+        document.getElementById('group').className = "active";
+    </script>
+
+    {% csrf_token %}
+    <div id="groups" class="row">
+        <div class="layer col-md-2">
+            <div class="layer title">Statements to group</div>
+            <ul id="source_group" class="block__list block__list_tags">
+                {% for statement in statements %}
+                <li id="{{statement.id}}">{{statement}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="destination_group" class="row">
+        <div id="group-1" class="layer col-md-2">
+            <div class="layer title">Group</div>
+            <ul class="block__list block__list_tags">
+            </ul>
+        </div>
+
+        <div id="group-2" class="layer col-md-2">
+            <div class="layer title">Group</div>
+            <ul class="block__list block__list_tags">
+            </ul>
+        </div>
+    </div>
+
+
+    <button id="add_group" class="btn" ng-click="addGroup()">Add Group</button>
+    <button id="save_button" class="btn btn-primary" ng-click="saveOrdering()">Save</button>
+
+    <script src="{% static 'dc/js/Sortable.min.js' %}"></script>
+    <script src="{% static 'dc/js/ng-sortable.js' %}"></script>
+
+    <script id="jsbin-javascript" src="{% static 'dc/js/group.js' %}"></script>
+
+</div>
+{% endblock %}

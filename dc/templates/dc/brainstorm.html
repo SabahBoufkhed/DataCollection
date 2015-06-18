@@ -1,0 +1,59 @@
+{% extends "dc/base.html" %}
+
+{% block content %}
+
+{{ heading }}
+
+<script>
+    document.getElementById('brainstorm').className = "active";
+</script>
+
+
+<div ng-app="brainstormingApp" ng-controller="brainstormingController">
+
+<form action="{% url 'dc:brainstorm' %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+    <div class="form-group" id="form_inputs">
+        <input class="form-control" type="text" name="statement">
+    </div>
+    </fieldset>
+
+    <div class="form-group form-actions">
+        <input id="add_button" type="button" class="btn" ng-click="addGroup()" value="Add Statement" />
+        <input id="submit_button" type="submit" class="btn btn-primary" value="Submit" />
+    </div>
+</form>
+
+
+<script>
+
+var app = angular.module( "brainstormingApp", [] ).config(function($httpProvider) {
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+});
+
+app.controller(
+    "brainstormingController", [ '$scope', '$http', '$log',
+    function( $scope, $http, $log ) {
+        $scope.numStatements = 1;
+
+        $scope.addGroup = function() {
+            var s_form = document.getElementById("form_inputs");
+
+            var n = document.createElement("input");
+            n.name = "statement" // + $scope.numStatements;
+            n.className = "form-control"
+
+            //$scope.numStatements++;
+
+            n.type = "text";
+
+            s_form.appendChild(n, document.getElementById("add_button"));
+        };
+    }
+]);
+
+</script>
+</div>
+{% endblock %}

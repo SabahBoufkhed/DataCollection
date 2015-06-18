@@ -1,0 +1,26 @@
+{% extends "dc/base.html" %}
+
+{% block content %}
+<script>
+    document.getElementById('welcome').className = "active";
+</script>
+
+{{ heading }}
+<br/>
+
+Welcome {{ name }}. Please log in with the provided password.
+
+<form action="{% url 'dc:welcome' %}" method="POST">
+    {% csrf_token %}
+    <div class="checkbox">
+        <label><input type="checkbox" name="consent" />I consent to bla bla bla</label>
+    </div>
+    <div class="form-groups">
+        <label>Password: <input type="password" name="password"/></label>
+    </div>
+    <button type="submit" class="btn btn-primary">Go</button>
+</form>
+
+
+
+{% endblock %}

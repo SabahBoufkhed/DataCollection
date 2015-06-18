@@ -1,0 +1,48 @@
+{% extends "dc/base.html" %}
+
+{% block content %}
+
+{{ heading }}
+<br/>
+<!--<div class="btn-group" role="group" data-toggle="button" id="rate-group-{{s.id}}">-->
+<!--<input type="input" class="btn btn-default" id="1">1</input>-->
+<!--<input type="input" class="btn btn-default" id="2">2</input>-->
+<!--<input type="input" class="btn btn-default" id="3">3</input>-->
+<!--<input type="input" class="btn btn-default" id="4">4</input>-->
+<!--<input type="input" class="btn btn-default" id="5">5</input>-->
+<!--</div>-->
+
+<script>
+    document.getElementById('rate').className = "active";
+</script>
+
+<form action="{% url 'dc:rate_statements' %}" method="post">
+    {% csrf_token %}
+    {% for s in statements %}
+    <label value="{{ s }}">{{ s }}</label>
+    <br>
+    <div class="btn-group btn-group-justified" data-toggle="buttons">
+    <!--id="rate-group-{{s.id}}">-->
+        <label class="btn btn-primary ">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-1" value="1" autocomplete="off">1
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-2" value="2" autocomplete="off">2
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-3" value="3" autocomplete="off">3
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off">4
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off">5
+        </label>
+    </div>
+
+    <br>
+    {% endfor %}
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
