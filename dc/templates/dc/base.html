@@ -72,25 +72,35 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar" id="sidebar">
-                <li id="welcome"><a href="{% url 'dc:welcome' %}">Welcome</a></li>
-                <li id="sign_in"><a href="{% url 'dc:sign_in' %}">Sign Up</a></li>
-                <li id="brainstorm"><a href="{% url 'dc:brainstorm' %}">Brainstorm</a></li>
-                <li id="group"><a href="{% url 'dc:group_statements' %}">Group Statements</a></li>
-                <li id="rate"><a href="{% url 'dc:rate_statements' %}">Rate Statements</a></li>
+                <li id="welcome" class="disabled"><a href="{% url 'dc:welcome' %}">Welcome</a></li>
+                <li id="sign_in" class="disabled"><a href="{% url 'dc:sign_in' %}">Sign Up</a></li>
+                <li id="brainstorm" class="disabled"><a href="{% url 'dc:brainstorm' %}">Brainstorm</a></li>
+                <li id="group" class="disabled"><a href="{% url 'dc:group_statements' %}">Group Statements</a></li>
+                <li id="rate" class="disabled"><a href="{% url 'dc:rate_statements' %}">Rate Statements</a></li>
                 <li id="thanks" class="disabled"><a>Thank you</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-
             {% block content %}{% endblock %}
         </div>
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+
+<!--<script>-->
+    <!--[].forEach.call(document.getElementById('sidebar').children, function(el) {-->
+        <!--el.className = 'disabled';-->
+    <!--});-->
+
+    <!--if( '{{ user.current_phase }}' == 'newly_added' ) {-->
+
+    <!--} else {-->
+        <!--[].forEach.call(document.getElementById('sign_in').children =, function(el) {-->
+            <!--el.className = 'active';-->
+        <!--});-->
+
+    <!--}-->
+<!--</script>-->
 
 </body>
 </html>

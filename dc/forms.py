@@ -11,7 +11,7 @@ class ParticipantForm(ModelForm):
         model = models.Participant
         #fields = '__all__' #TODO fix
 
-        fields = ['first_name', 'last_name', 'gender', 'age', 'position', 'type_experience']
+        fields = ['first_name', 'last_name', 'gender', 'age', 'position', 'type_experience', 'years_experience']
         #
         # labels = {
         #     'name': _('Writer'),

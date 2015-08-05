@@ -9,7 +9,7 @@
 </script>
 
 
-<div ng-app="brainstormingApp" ng-controller="brainstormingController">
+<div ng-app="brainstormingApp" ng-controller="brainstormingController" id="ngDiv">
 
 <form action="{% url 'dc:brainstorm' %}" method="post">
     {% csrf_token %}
@@ -20,13 +20,24 @@
     </fieldset>
 
     <div class="form-group form-actions">
-        <input id="add_button" type="button" class="btn" ng-click="addGroup()" value="Add Statement" />
-        <input id="submit_button" type="submit" class="btn btn-primary" value="Submit" />
+        <input id="add_button"     tabindex="2" type="button" class="btn" ng-click="addGroup()" value="Add Statement" />
+        <input id="submit_button"  tabindex="1" type="submit" class="btn btn-primary" value="Submit" />
     </div>
 </form>
 
 
 <script>
+
+    document.getElementById('form_inputs').addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) {
+            console.log('sdfasdfsd');
+            event.preventDefault();
+
+
+            var scope = angular.element(document.getElementById('ngDiv')).scope()
+            scope.addGroup();
+        }
+    });
 
 var app = angular.module( "brainstormingApp", [] ).config(function($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -49,7 +60,7 @@ app.controller(
 
             n.type = "text";
 
-            s_form.appendChild(n, document.getElementById("add_button"));
+            s_form.appendChild(n, document.getElementById("add_button")).focus();
         };
     }
 ]);

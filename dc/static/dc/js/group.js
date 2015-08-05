@@ -16,8 +16,8 @@ var app = angular.module( "groupingApp", [] ).config(function($httpProvider) {
 });
 
 app.controller(
-    "groupingController", [ '$scope', '$http', '$log', '$location',
-    function( $scope, $http, $log, $location ) {
+    "groupingController", [ '$scope', '$http', '$log', '$location', '$window',
+    function( $scope, $http, $log, $location, $window ) {
         $scope.numGroups = 2;
 
         $scope.addGroup = function() {
@@ -25,7 +25,6 @@ app.controller(
 
             var newGroup = document.createElement("div");
             newGroup.id = "group-" + $scope.numGroups++;
-
             newGroup.className = "layer col-md-2"
 
             var groupTitle = document.createElement("div");
@@ -40,11 +39,11 @@ app.controller(
             groups.appendChild(newGroup);
 
             Sortable.create(groupEl,
-                {
-                    group: 'grouping',
-                    animation: 100,
-                    ghostClass: '.sortable-ghost'
-                }
+            {
+                group: 'grouping',
+                animation: 100,
+                ghostClass: '.sortable-ghost'
+            }
             );
         }
 
@@ -52,39 +51,47 @@ app.controller(
             var source_group = document.getElementById("source_group");
             if( source_group.getElementsByTagName('li').length > 0) {
                 alert("Please sort all statements");
-                return;
+                return false;
             }
 
             var groups = document.getElementById("destination_group");
             var o = [];
 
-           [].every.call(groups.children, function(group) {
+            [].every.call(groups.children, function(group) {
                 var g = [];
                 [].forEach.call(group.getElementsByTagName('li'), function(element) {
                     g.push({ 'name': element.innerHTML, 'id': element.id});
-                })
+                });
 
+                var submit = true;
                 if(g.length == 0) {
                     groups.removeChild(group);
                 } else
                 if(g.length < 2) {
                     alert("Please make sure each group has at least two items.");
+                    submit = false;
                     return false;
                 } else {
                     o.push(g);
                 }
+
                 return true;
             });
 
-            $http(
-            { 'method': 'POST',
-              'url': '/group/',
-              'data': o
+            if(submit) {
+                $http(
+                    { 'method': 'POST',
+                    'url': '/group/',
+                    'data': o
+                    }
+                ).
+                success(function(data, status, headers, config) {
+                    $window.location.href = '/rate/';
+                    $window.location.href;2
+                });
+            } else {
+                return false;
             }
-            ).
-            success(function(data, status, headers, config) {
-                $location.path(config.url)
-            });
         };
     }
 ]);

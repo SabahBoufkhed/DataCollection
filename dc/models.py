@@ -8,14 +8,10 @@ gender_choices = (
     ('N', 'N/A')
 )
 
-position_choices = (
-    ('punk_rocker', 'Punk Rocker'),
-    ('bass_player', 'Bass Player')
-)
-
 phase_choices = (
     ('newly_added', 'Newly Added'),
     ('brainstorming_completed', 'Brainstorming Completed'),
+    ('grouping_enabled', 'Grouping Enabled'),
     ('rating_completed', 'Rating Completed')
 )
 
@@ -30,14 +26,16 @@ class Participant(models.Model):
 
     gender = models.CharField(max_length=1, choices=gender_choices, default='N')
     age = models.IntegerField(blank=True, null=True)
-    position = models.CharField(blank=True, null=True, max_length=100, choices=position_choices)
+    position = models.CharField(blank=True, null=True, max_length=100)
     type_experience = models.CharField(blank=True, max_length=100)
     years_experience = models.IntegerField(blank=True, null=True)
 
     current_phase = models.CharField(max_length=50, choices=phase_choices, default='newly_added')
-    password = models.CharField(max_length=100, default="password") #TODO: figure out passwords
 
     def __str__(self):
+        return self.first_name + " " + self.last_name
+
+    def __unicode__(self):
         return self.first_name + " " + self.last_name
 
     def user_url(self):
@@ -55,11 +53,10 @@ class ParticipantStatement(models.Model):
         return self.text
 
 class DistilledStatement(models.Model):
-    synopsis = models.CharField(max_length=100)
     text_question = models.TextField()
 
     def __str__(self):
-        return self.synopsis
+        return self.text_question
 
 
 class StatementRating(models.Model):

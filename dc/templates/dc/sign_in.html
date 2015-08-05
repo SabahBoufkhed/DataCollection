@@ -5,7 +5,7 @@
     document.getElementById('sign_in').className = "active";
 </script>
 
-Welcome {{ name }}. Please fill in more details about yourself.
+Welcome {{ user.first_name }}. Please fill in more details about yourself.
 
 <h1 class="page-header">Please Sign In</h1>
 <form action="{% url 'dc:sign_in' %}" class="form-horizontal form-group" method="post">

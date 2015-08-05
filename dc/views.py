@@ -14,63 +14,33 @@ import pprint
 import json
 
 
-def group_statements(request):
+def welcome(request, user_id = None):
+    if not user_id:
+        return HttpResponseRedirect(reverse('dc:error'))
+
+    p = get_object_or_404(Participant, pk=user_id)
+
     if request.method == "GET":
-        h = get_object_or_404(ModuleHeading, module_name='group')
-        s = DistilledStatement.objects.all()
+        h = get_object_or_404(ModuleHeading, module_name='home')
+        r = dict(
+            heading=format_html(h.heading_content),
+            user=p
+        )
 
-        r = {
-            'heading': format_html(h.heading_content),
-            'statements': s
-        }
-        return render(request, 'dc/group.html', r)
-
+        return render(request, 'dc/welcome.html', r)
     elif request.method == "POST":
-        d = json.loads(request.body.decode("utf-8"))
+        if request.POST.get('consent_checkbox'):
+            request.session['user_id'] = user_id
 
-        current_user = get_object_or_404(Participant, pk=request.session['user_id'])
-        group_number = 0
+            if p.current_phase == 'newly_added':
+                return HttpResponseRedirect(reverse('dc:sign_in'))
+            elif p.current_phase in ('brainstorming_completed', 'rating_completed'):
+                return HttpResponseRedirect(reverse('dc:thanks'))
+            elif p.current_phase == 'grouping_enabled':
+                return HttpResponseRedirect(reverse('dc:group_statements'))
 
-        pprint.pprint(d)
-        for group in d:
-            pprint.pprint(group)
-            for statement in group:
-                s = get_object_or_404(DistilledStatement, pk=statement['id'])
-                grouping = StatementSorting(participant=current_user, order=group_number, statement=s)
-                grouping.save()
-            group_number += 1
-        return HttpResponseRedirect(reverse('dc:rate_statements'))
-
-
-def rate_statements(request):
-    if request.method == "GET":
-        h = get_object_or_404(ModuleHeading, module_name='rate')
-        s = DistilledStatement.objects.all()
-
-        r = {
-            'heading': format_html(h.heading_content),
-            'statements': s
-        }
-
-        pprint.pprint(r)
-        return render(request, 'dc/rate.html', r)
-
-    elif request.method == "POST":
-        current_user = get_object_or_404(Participant, pk=request.session['user_id'])
-
-        pprint.pprint(request.POST)
-        for key in request.POST:
-            if key == 'csrfmiddlewaretoken':
-                continue
-
-            rating = request.POST[key]
-
-            s = get_object_or_404(DistilledStatement, pk=key)
-
-            rating = StatementRating(participant=current_user, statement=s, rating=rating)
-            rating.save()
-
-        return HttpResponseRedirect(reverse('dc:thanks'))
+        else:
+            print('user didn;t consent')
 
 
 class SignInFormView(generic.UpdateView):
@@ -85,74 +55,21 @@ class SignInFormView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(SignInFormView, self).get_context_data(**kwargs)
-
-        context['name'] = str(self.object)
+        context['user'] = self.object
         return context
 
     def form_valid(self, form):
-        pprint.pprint(form)
         new_participant = form.save()
 
-        #self.request.session['logged_in_as'] = new_participant.id
         return HttpResponseRedirect(self.success_url)
 
 
-def logout(request):
-    if 'logged_in_as' in request.session:
-        del request.session['logged_in_as']
-        return HttpResponse("logged out")
-    else:
-        return HttpResponse("wasn't logged in")
-
-
-def welcome(request, user_id=None):
-    if request.method == "GET":
-        h = get_object_or_404(ModuleHeading, module_name='home')
-        r = {
-            'heading': format_html(h.heading_content)
-        }
-
-        if user_id:
-            p = get_object_or_404(Participant, pk=user_id)
-
-            request.session['user_id'] = user_id
-            r['name'] = str(p)
-
-        return render(request, 'dc/welcome.html', r)
-
-
-    elif request.method == "POST":
-        if 'user_id' in request.session:
-            p = get_object_or_404(Participant, pk=request.session['user_id'])
-
-            password = request.POST['password']
-            if str(password) == p.password:
-                print("pass matches")
-            else:
-                print("pass doesnt match")
-            return HttpResponseRedirect(reverse('dc:sign_in'))
-        else:
-            return HttpResponse('you are not a user') #TODO:
-#
-# def sign_in(request):
-#     if 'user_id' not in request.session:
-#         return HttpResponse('you are not a user')
-#
-#     p = get_object_or_404(Participant, pk=request.session['user_id'])
-#     if request.method == "GET":
-#         pass
-#     return render(request, 'dc/log_in.html', {'name': str(p)})
-#
-#     # if 'logged_in_as' in request.session:
-#     #     user_id = request.session['logged_in_as']
-#     #     p = get_object_or_404(Participant, pk=user_id)
-#     #
-#     #     return render(request, 'dc/log_in.html', {'name': str(p)})
-#     # else:
-#     #     return render(request, 'dc/sign_in.html')
-
-
 def brainstorm(request):
+    if 'user_id' not in request.session:
+        return HttpResponseRedirect(reverse('dc:error'))
+
+    p = get_object_or_404(Participant, pk=request.session['user_id'])
+
     if request.method == "GET":
         h = get_object_or_404(ModuleHeading, module_name='brainstorm')
         r = {
@@ -162,21 +79,86 @@ def brainstorm(request):
         return render(request, 'dc/brainstorm.html', r)
 
     elif request.method == "POST":
-        #TODO: how to guard against user not being there?
-        current_user = get_object_or_404(Participant, pk=request.session['user_id'])
-
         statements = request.POST.getlist('statement')
         for s in statements:
-            db_s = ParticipantStatement(text=s, author=current_user)
+            db_s = ParticipantStatement(text=s, author=p)
             db_s.save()
 
-        print("Saved num=" + str(len(statements)))
+        p.current_phase = 'brainstorming_completed'
+        p.save()
+
+        return HttpResponseRedirect(reverse('dc:thanks'))
+
+
+def group_statements(request):
+    if 'user_id' not in request.session:
+        return HttpResponseRedirect(reverse('dc:error'))
+
+    p = get_object_or_404(Participant, pk=request.session['user_id'])
+
+    if request.method == "GET":
+        h = get_object_or_404(ModuleHeading, module_name='group')
+        s = DistilledStatement.objects.all()
+
+        r = {
+            'heading': format_html(h.heading_content),
+            'statements': s
+        }
+        return render(request, 'dc/group.html', r)
+
+    elif request.method == "POST":
+        d = json.loads(request.body.decode("utf-8"))
+
+        group_number = 0
+
+        for group in d:
+            for statement in group:
+                s = get_object_or_404(DistilledStatement, pk=statement['id'])
+                grouping = StatementSorting(participant=p, order=group_number, statement=s)
+                grouping.save()
+            group_number += 1
+        return HttpResponseRedirect(reverse('dc:rate_statements'))
+
+
+def rate_statements(request):
+    if 'user_id' not in request.session:
+        return HttpResponseRedirect(reverse('dc:error'))
+
+    p = get_object_or_404(Participant, pk=request.session['user_id'])
+
+    if request.method == "GET":
+        h = get_object_or_404(ModuleHeading, module_name='rate')
+        s = DistilledStatement.objects.all()
+
+        r = {
+            'heading': format_html(h.heading_content),
+            'statements': s
+        }
+
+        return render(request, 'dc/rate.html', r)
+
+    elif request.method == "POST":
+        for key in request.POST:
+            if key == 'csrfmiddlewaretoken':
+                continue
+
+            rating = request.POST[key]
+
+            s = get_object_or_404(DistilledStatement, pk=key)
+
+            rating = StatementRating(participant=p, statement=s, rating=rating)
+            rating.save()
+
+        p.current_phase = 'rating_completed'
+        p.save()
+
         return HttpResponseRedirect(reverse('dc:thanks'))
 
 
 def thanks(request):
-    if 'user_id' in request.session:
-        user_id = request.session['user_id']
-        p = get_object_or_404(Participant, pk=user_id)
+    if 'user_id' not in request.session:
+        return HttpResponseRedirect(reverse('dc:error'))
 
-        return render(request, 'dc/thanks.html', {"name": str(p)})
+    p = get_object_or_404(Participant, pk=request.session['user_id'])
+
+    return render(request, 'dc/thanks.html', {"name": str(p)})
