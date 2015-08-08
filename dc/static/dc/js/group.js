@@ -57,13 +57,14 @@ app.controller(
             var groups = document.getElementById("destination_group");
             var o = [];
 
+            var submit = true;
+
             [].every.call(groups.children, function(group) {
                 var g = [];
                 [].forEach.call(group.getElementsByTagName('li'), function(element) {
                     g.push({ 'name': element.innerHTML, 'id': element.id});
                 });
 
-                var submit = true;
                 if(g.length == 0) {
                     groups.removeChild(group);
                 } else
@@ -87,7 +88,7 @@ app.controller(
                 ).
                 success(function(data, status, headers, config) {
                     $window.location.href = '/rate/';
-                    $window.location.href;2
+                    $window.location.href;
                 });
             } else {
                 return false;

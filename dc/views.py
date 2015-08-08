@@ -14,23 +14,37 @@ import pprint
 import json
 
 
-def welcome(request, user_id = None):
-    if not user_id:
-        return HttpResponseRedirect(reverse('dc:error'))
-
-    p = get_object_or_404(Participant, pk=user_id)
-
+def welcome(request, user_id=None):
     if request.method == "GET":
         h = get_object_or_404(ModuleHeading, module_name='home')
-        r = dict(
-            heading=format_html(h.heading_content),
-            user=p
-        )
+        r = {
+            'heading': format_html(h.heading_content),
+            'user': None
+        }
+
+        if user_id:
+            request.session['attempt_login_id'] = user_id
+            p = get_object_or_404(Participant, pk=user_id)
+            r['user'] = {
+                'first_name': str(p.first_name),
+            }
 
         return render(request, 'dc/welcome.html', r)
+
     elif request.method == "POST":
         if request.POST.get('consent_checkbox'):
-            request.session['user_id'] = user_id
+            p = get_object_or_404(Participant, pk=request.session.get('attempt_login_id'))
+
+            if not request.POST.get('password') == p.password:
+                r = {
+                    'error_message': "Incorrect password.",
+                }
+                return render(request, 'dc/welcome.html', r)
+
+            print("setting user id in session")
+            request.session['user_id'] = str(p.id)
+
+            pprint.pprint(request.session)
 
             if p.current_phase == 'newly_added':
                 return HttpResponseRedirect(reverse('dc:sign_in'))
@@ -62,6 +76,10 @@ class SignInFormView(generic.UpdateView):
         new_participant = form.save()
 
         return HttpResponseRedirect(self.success_url)
+
+
+def error(request):
+    return render(request, 'dc/error.html')
 
 
 def brainstorm(request):
@@ -159,6 +177,8 @@ def thanks(request):
     if 'user_id' not in request.session:
         return HttpResponseRedirect(reverse('dc:error'))
 
+    user_id = request.session.get('user_id')
+    print('user_id={}'.format(user_id))
     p = get_object_or_404(Participant, pk=request.session['user_id'])
 
     return render(request, 'dc/thanks.html', {"name": str(p)})

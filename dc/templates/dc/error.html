@@ -1,0 +1,16 @@
+{% extends "dc/base.html" %}
+
+{% block content %}
+
+<script>
+        document.getElementById('thanks').className = "active";
+</script>
+
+<div>Unfortunately there was an error.</div><br/>
+
+{%if error_message %}
+
+<div>{{error_message}}</div>
+{% endif %}
+
+{% endblock %}

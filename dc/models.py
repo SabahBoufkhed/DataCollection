@@ -18,7 +18,7 @@ phase_choices = (
 page_main_url = "http://localhost:8000/welcome/"
 
 class Participant(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=str(uuid.uuid4()),  editable=False, max_length=36)
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -30,7 +30,11 @@ class Participant(models.Model):
     type_experience = models.CharField(blank=True, max_length=100)
     years_experience = models.IntegerField(blank=True, null=True)
 
+    password = models.CharField(blank=True, max_length=100, default="veryDifficultPassphrase")
+
     current_phase = models.CharField(max_length=50, choices=phase_choices, default='newly_added')
+
+    email = models.EmailField(null=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name

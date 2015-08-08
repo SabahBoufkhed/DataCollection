@@ -24,25 +24,25 @@
     <div class="btn-group btn-group-justified" data-toggle="buttons">
     <!--id="rate-group-{{s.id}}">-->
         <label class="btn btn-primary ">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-1" value="1" autocomplete="off">1
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-1" value="1" autocomplete="off">Strongly disagree
         </label>
         <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-2" value="2" autocomplete="off">2
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-2" value="2" autocomplete="off">Disagree
+        </label>
+        <label class="btn btn-primary active">
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-3" value="3" autocomplete="off" checked>Neutral
         </label>
         <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-3" value="3" autocomplete="off">3
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off">Agree
         </label>
         <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off">4
-        </label>
-        <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off">5
+            <input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off">Strongly agree
         </label>
     </div>
 
     <br>
     {% endfor %}
-    <input type="submit" value="Submit" />
+    <input type="submit"  class="btn btn-primary" value="Submit" />
 </form>
 
 {% endblock %}

@@ -17,15 +17,16 @@ class ParticipantResource(resources.ModelResource):
 @admin.register(Participant)
 class ParticipantAdmin(ExportMixin, admin.ModelAdmin):
     fieldsets = [
-        ('Basic', {'fields': ['first_name', 'last_name', 'current_phase']}),
+        ('Basic', {'fields': ['first_name', 'last_name', 'current_phase', 'password']}),
         ('Experience', {'fields': ['position', 'type_experience', 'years_experience']}),
         ('More', {'fields': ['age', 'gender']})
     ]
 
-    list_display = ('first_name', 'last_name', 'current_phase', 'date_added', 'id', 'user_url')
+    list_editable = ('current_phase',)
+    list_display = ('first_name', 'last_name', 'current_phase', 'date_added', 'id', 'password', 'user_url')
 
     resource_class = ParticipantResource
-    pass
+
 
 class ParticipantStatementResource(resources.ModelResource):
     author_full = fields.Field()
@@ -37,6 +38,7 @@ class ParticipantStatementResource(resources.ModelResource):
     def dehydrate_author_full(self, p):
         return "%s %s" % (p.author.first_name, p.author.last_name)
 
+
 @admin.register(ParticipantStatement)
 class ParticipantStatementAdmin(ExportMixin, admin.ModelAdmin):
     fields = ['timestamp', 'text', 'author']
@@ -46,18 +48,12 @@ class ParticipantStatementAdmin(ExportMixin, admin.ModelAdmin):
 
     resource_class = ParticipantStatementResource
 
-#
-# class ParticipantStatementAdmin(admin.ModelAdmin):
-#     fields = ['timestamp', 'text', 'author']
-#     list_display = ('timestamp', 'text', 'author')
-#
-#     list_filter = ['author']
-
 
 class DistilledStatementResource(resources.ModelResource):
     class Meta:
         model = DistilledStatement
         fields = ('text_question', 'id')
+
 
 @admin.register(DistilledStatement)
 class DistilledStatementAdmin(ImportMixin, admin.ModelAdmin):
@@ -70,9 +66,11 @@ class DistilledStatementAdmin(ImportMixin, admin.ModelAdmin):
 class StatementSortingAdmin(admin.ModelAdmin):
     list_display = ('participant', 'statement', 'order')
 
+
 @admin.register(StatementRating)
 class StatementRatingAdmin(admin.ModelAdmin):
     list_display = ('participant', 'statement', 'rating')
+
 
 @admin.register(ModuleHeading)
 class ModuleHeadingAdmin(admin.ModelAdmin):

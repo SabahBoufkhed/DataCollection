@@ -8,10 +8,15 @@
         var submit = document.getElementById('submit_button');
         submit.disabled = !val.checked;
     }
-
 </script>
 
 {{ heading }}
+<br/>
+
+{%if error_message %}
+<div>{{ error_message }}</div>
+{% endif %}
+
 <br/>
 
 {% if user %}
@@ -19,6 +24,7 @@ Welcome {{ user.first_name }}. Please log in with the provided password.
 
 <form action="{% url 'dc:welcome_with_id' user_id=user.id %}" method="POST">
     {% csrf_token %}
+    <label>Password:<input type="password" name="password" /></label>
     <div class="checkbox">
         <label><input type="checkbox" name="consent_checkbox" onchange="EnableSubmit(this)" />I consent to bla bla bla</label>
     </div>

@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^rate/$', views.rate_statements, name='rate_statements'),
 
     url(r'^thanks/$', views.thanks, name='thanks'),
+
+    url(r'^error/$', views.error, name='error')
 ]
