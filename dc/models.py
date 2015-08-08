@@ -43,7 +43,7 @@ class Participant(models.Model):
         return self.first_name + " " + self.last_name
 
     def user_url(self):
-        return page_main_url + str(self.id) + "/"
+        return page_main_url + "welcome/" + str(self.id) + "/"
 
     user_url.short_description = "User URL"
 
