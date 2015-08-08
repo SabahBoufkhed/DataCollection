@@ -15,7 +15,7 @@ phase_choices = (
     ('rating_completed', 'Rating Completed')
 )
 
-page_main_url = "http://localhost:8000/welcome/"
+page_main_url = "http://qba.pythonanywhere.com/"
 
 class Participant(models.Model):
     id = models.CharField(primary_key=True, default=str(uuid.uuid4()),  editable=False, max_length=36)
