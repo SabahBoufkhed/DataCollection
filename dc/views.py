@@ -15,20 +15,20 @@ import json
 
 
 def welcome(request, user_id=None):
-    if request.method == "GET":
-        h = get_object_or_404(ModuleHeading, module_name='home')
-        r = {
-            'heading': format_html(h.heading_content),
-            'user': None
-        }
+    h = get_object_or_404(ModuleHeading, module_name='home')
+    r = {
+        'heading': format_html(h.heading_content),
+        'user': None
+    }
 
+    if request.method == "GET":
         if user_id:
             request.session['attempt_login_id'] = user_id
             p = get_object_or_404(Participant, pk=user_id)
             r['user'] = {
                 'first_name': str(p.first_name),
+                'id': p.id
             }
-
         return render(request, 'dc/welcome.html', r)
 
     elif request.method == "POST":
@@ -36,15 +36,15 @@ def welcome(request, user_id=None):
             p = get_object_or_404(Participant, pk=request.session.get('attempt_login_id'))
 
             if not request.POST.get('password') == p.password:
-                r = {
-                    'error_message': "Incorrect password.",
+                r['error_message'] = "Incorrect password."
+                r['user'] = {
+                    'first_name': p.first_name,
+                    'id': p.id
                 }
+
                 return render(request, 'dc/welcome.html', r)
 
-            print("setting user id in session")
             request.session['user_id'] = str(p.id)
-
-            pprint.pprint(request.session)
 
             if p.current_phase == 'newly_added':
                 return HttpResponseRedirect(reverse('dc:sign_in'))
@@ -52,7 +52,6 @@ def welcome(request, user_id=None):
                 return HttpResponseRedirect(reverse('dc:thanks'))
             elif p.current_phase == 'grouping_enabled':
                 return HttpResponseRedirect(reverse('dc:group_statements'))
-
         else:
             print('user didn;t consent')
 

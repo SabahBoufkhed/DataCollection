@@ -20,19 +20,19 @@
 <br/>
 
 {% if user %}
-Welcome {{ user.first_name }}. Please log in with the provided password.
+<div>Welcome {{ user.first_name }}. Please log in with the provided password.</div>
+
+<br/>
 
 <form action="{% url 'dc:welcome_with_id' user_id=user.id %}" method="POST">
     {% csrf_token %}
     <label>Password:<input type="password" name="password" /></label>
     <div class="checkbox">
-        <label><input type="checkbox" name="consent_checkbox" onchange="EnableSubmit(this)" />I consent to bla bla bla</label>
+        <label><input type="checkbox" name="consent_checkbox" onchange="EnableSubmit(this)" />I consent</label>
     </div>
     <button type="submit" id="submit_button" disabled="true" class="btn btn-primary">Go</button>
 </form>
 
 
 {% endif %}
-
-
 {% endblock %}
