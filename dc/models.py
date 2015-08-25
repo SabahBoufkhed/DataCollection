@@ -68,13 +68,13 @@ class DistilledStatement(models.Model):
 
 
 class StatementRating(models.Model):
-    participant = models.ForeignKey(Participant)
+    author = models.ForeignKey(Participant)
     statement = models.ForeignKey(DistilledStatement)
     rating = models.IntegerField()
 
 
 class StatementSorting(models.Model):
-    participant = models.ForeignKey(Participant)
+    author = models.ForeignKey(Participant)
     statement = models.ForeignKey(DistilledStatement)
     order = models.IntegerField()
 

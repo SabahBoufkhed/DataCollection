@@ -131,7 +131,7 @@ def group_statements(request):
         for group in d:
             for statement in group:
                 s = get_object_or_404(DistilledStatement, pk=statement['id'])
-                grouping = StatementSorting(participant=p, order=group_number, statement=s)
+                grouping = StatementSorting(author=p, order=group_number, statement=s)
                 grouping.save()
             group_number += 1
         return HttpResponseRedirect(reverse('dc:rate_statements'))
@@ -163,7 +163,7 @@ def rate_statements(request):
 
             s = get_object_or_404(DistilledStatement, pk=key)
 
-            rating = StatementRating(participant=p, statement=s, rating=rating)
+            rating = StatementRating(author=p, statement=s, rating=rating)
             rating.save()
 
         p.current_phase = 'rating_completed'

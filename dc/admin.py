@@ -82,7 +82,14 @@ class DistilledStatementAdmin(ImportMixin, admin.ModelAdmin):
     class DistilledStatementResource(resources.ModelResource):
         class Meta:
             model = DistilledStatement
-            fields = ('text_question', 'id')
+            fields = ('text_question',)
+
+        def get_instance(self, instance_loader, row):
+            return False
+
+        def init_instance(self, row=None):
+            o = self._meta.model()
+            return o
 
     list_display = ('text_question', )
 
@@ -94,9 +101,12 @@ class StatementSortingAdmin(ExportMixin, admin.ModelAdmin):
     class StatementSortingResource(resources.ModelResource):
         class Meta:
             model = StatementSorting
-            fields = ('participant', 'statement', 'order')
+            fields = ('author_full', 'statement', 'order')
 
-    list_display = ('participant', 'statement', 'order')
+        def dehydrate_author_full(self, p):
+            return "%s %s" % (p.author.first_name, p.author.last_name)
+
+    list_display = ('author', 'statement', 'order')
     resource_class = StatementSortingResource
 
 
@@ -105,9 +115,15 @@ class StatementRatingAdmin(ExportMixin, admin.ModelAdmin):
     class StatementRatingResource(resources.ModelResource):
         class Meta:
             model = StatementRating
-            fields = ('participant', 'statement', 'rating')
+            fields = ('author_full', 'statement', 'rating')
 
-    list_display = ('participant', 'statement', 'rating')
+        def dehydrate_author_full(self, p):
+            return "%s %s" % (p.author.first_name, p.author.last_name)
+
+        def dehydrate_statement_text(self, s):
+            return str(s.statment)
+
+    list_display = ('author', 'statement', 'rating')
     resource_class = StatementRatingResource
 
 
