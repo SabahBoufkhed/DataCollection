@@ -2,6 +2,11 @@ from django.db import models
 import datetime
 import uuid
 
+from django.template.loader import get_template
+
+from django.template import Context
+
+
 gender_choices = (
     ('M', 'Male'),
     ('F', 'Female'),
@@ -18,7 +23,7 @@ phase_choices = (
 page_main_url = "http://qba.pythonanywhere.com/"
 
 class Participant(models.Model):
-    id = models.CharField(primary_key=True, default=str(uuid.uuid4()),  editable=False, max_length=36)
+    id = models.CharField(primary_key=True, default=str(uuid.uuid4()), unique=True, editable=False, blank=True, max_length=36)
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -46,7 +51,6 @@ class Participant(models.Model):
         return page_main_url + "welcome/" + str(self.id) + "/"
 
     user_url.short_description = "User URL"
-
 
 class ParticipantStatement(models.Model):
     author = models.ForeignKey(Participant)
@@ -79,7 +83,8 @@ modules = (
     ('home', 'Home'),
     ('brainstorm', 'Brainstorm'),
     ('group', 'Group'),
-    ('rate', 'Rate')
+    ('rate', 'Rate'),
+    ('user_email_template', "User Email Template")
 )
 
 
