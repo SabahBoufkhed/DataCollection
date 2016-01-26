@@ -3,46 +3,60 @@
 {% block content %}
 
 {{ heading }}
-<br/>
-<!--<div class="btn-group" role="group" data-toggle="button" id="rate-group-{{s.id}}">-->
-<!--<input type="input" class="btn btn-default" id="1">1</input>-->
-<!--<input type="input" class="btn btn-default" id="2">2</input>-->
-<!--<input type="input" class="btn btn-default" id="3">3</input>-->
-<!--<input type="input" class="btn btn-default" id="4">4</input>-->
-<!--<input type="input" class="btn btn-default" id="5">5</input>-->
-<!--</div>-->
+<br>
 
 <script>
     document.getElementById('rate').className = "active";
+
+    function checkForm() {
+
+        if($('.missing:checked').length != 0) {
+            alert("It seems that one of the statements have not been rated, please rate all the statements");
+            return false;
+        }
+
+
+        if(confirm('Have you checked that the ratings you have proposed corresponds to relative importance you gave to each statements?')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 </script>
-
-<form action="{% url 'dc:rate_statements' %}" method="post">
+<form name="ratingForm" action="{% url 'dc:rate_statements' %}" method="post">
     {% csrf_token %}
-    {% for s in statements %}
-    <label value="{{ s }}">{{ s }}</label>
-    <br>
-    <div class="btn-group btn-group-justified" data-toggle="buttons">
-    <!--id="rate-group-{{s.id}}">-->
-        <label class="btn btn-primary ">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-1" value="1" autocomplete="off">Strongly disagree
-        </label>
-        <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-2" value="2" autocomplete="off">Disagree
-        </label>
-        <label class="btn btn-primary active">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-3" value="3" autocomplete="off" checked>Neutral
-        </label>
-        <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off">Agree
-        </label>
-        <label class="btn btn-primary">
-            <input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off">Strongly agree
-        </label>
-    </div>
 
-    <br>
-    {% endfor %}
-    <input type="submit"  class="btn btn-primary" value="Submit" />
+    <table>
+        <tr>
+            <th></th>
+            <th>Relatively unimportant</th>
+            <th>Somewhat important</th>
+            <th>Moderately important</th>
+            <th>Very important</th>
+            <th>Extremely important</th>
+            <th>Missing</th>
+        </tr>
+
+
+        {% for s in statements %}
+        <tr>
+            <td>{{ s }}</td>
+            <td><input type="radio" name="{{s.id}}" id="{{s.id}}-1" value="1" autocomplete="off"></td>
+            <td><input type="radio" name="{{s.id}}" id="{{s.id}}-2" value="2" autocomplete="off"></td>
+            <td><input type="radio" name="{{s.id}}" id="{{s.id}}-3" value="3" autocomplete="off"></td>
+            <td><input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off"></td>
+            <td><input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off"></td>
+            <td><input type="radio" name="{{s.id}}" class="missing" id="{{s.id}}-missing" autocomplete="off" checked></td>
+
+            </div>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <input type="submit" class="btn btn-primary" value="Submit" onclick="return checkForm()"/>
 </form>
+
 
 {% endblock %}

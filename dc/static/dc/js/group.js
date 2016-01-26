@@ -6,7 +6,10 @@ Sortable.create(source_group, {
 [].forEach.call(destination_group.getElementsByClassName('block__list'), function(e) {
     Sortable.create(e, {
         group: "grouping",
-        animation: 100
+        animation: 0,
+        sort: false,
+
+
     });
 });
 
@@ -25,10 +28,10 @@ app.controller(
 
             var newGroup = document.createElement("div");
             newGroup.id = "group-" + $scope.numGroups++;
-            newGroup.className = "layer col-md-2"
+            newGroup.className = "layer"
 
             var groupTitle = document.createElement("div");
-            groupTitle.innerHTML = "Group";
+            groupTitle.innerHTML = "Group " + $scope.numGroups;
             groupTitle.className = "layer title";
             newGroup.appendChild(groupTitle);
 
@@ -80,16 +83,20 @@ app.controller(
             });
 
             if(submit) {
-                $http(
-                    { 'method': 'POST',
-                    'url': '/group/',
-                    'data': o
-                    }
-                ).
-                success(function(data, status, headers, config) {
-                    $window.location.href = '/rate/';
-                    $window.location.href;
-                });
+                if(confirm("Have you checked that all statements have been classified in the way that makes most sense to you?")) {
+                    $http(
+                        { 'method': 'POST',
+                        'url': '/group/',
+                        'data': o
+                        }
+                    ).
+                    success(function(data, status, headers, config) {
+                        $window.location.href = '/rate/';
+                        $window.location.href;
+                    });
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }

@@ -16,6 +16,7 @@
 
     <link href="{% static 'dc/dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'dc/css/dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'dc/css/styles.css' %}" rel="stylesheet">
 
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
     <script src="{% static 'dc/js/jquery.min.js' %}"></script>
@@ -36,7 +37,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Data Collection</a>
+            <a class="navbar-brand" href="#">Concept mapping of ‘exploitation of migrants working in low-skilled jobs’</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -63,9 +64,9 @@
             <ul class="nav nav-sidebar" id="sidebar">
                 <li id="welcome" class="disabled"><a href="{% url 'dc:welcome' %}">Welcome</a></li>
                 <li id="sign_in" class="disabled"><a href="{% url 'dc:sign_in' %}">Sign Up</a></li>
-                <li id="brainstorm" class="disabled"><a href="{% url 'dc:brainstorm' %}">Brainstorm</a></li>
-                <li id="group" class="disabled"><a href="{% url 'dc:group_statements' %}">Group Statements</a></li>
-                <li id="rate" class="disabled"><a href="{% url 'dc:rate_statements' %}">Rate Statements</a></li>
+                <li id="brainstorm" class="disabled"><a href="{% url 'dc:brainstorm' %}">Brainstorming</a></li>
+                <li id="group" class="disabled"><a href="{% url 'dc:group_statements' %}">Sorting Statements</a></li>
+                <li id="rate" class="disabled"><a href="{% url 'dc:rate_statements' %}">Rating Statements</a></li>
                 <li id="thanks" class="disabled"><a>Thank you</a></li>
             </ul>
         </div>
@@ -80,21 +81,6 @@
         event.preventDefault();
     });
 </script>
-
-<!--<script>-->
-    <!--[].forEach.call(document.getElementById('sidebar').children, function(el) {-->
-        <!--el.className = 'disabled';-->
-    <!--});-->
-
-    <!--if( '{{ user.current_phase }}' == 'newly_added' ) {-->
-
-    <!--} else {-->
-        <!--[].forEach.call(document.getElementById('sign_in').children =, function(el) {-->
-            <!--el.className = 'active';-->
-        <!--});-->
-
-    <!--}-->
-<!--</script>-->
 
 </body>
 </html>

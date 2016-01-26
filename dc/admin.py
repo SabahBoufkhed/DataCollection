@@ -16,7 +16,7 @@ class ParticipantAdmin(ImportExportMixin, admin.ModelAdmin):
     class ParticipantResource(resources.ModelResource):
         class Meta:
             model = Participant
-            fields = ('first_name', 'last_name', 'email')
+            fields = ('first_name', 'last_name', 'email', 'age', 'gender', 'type_experience', 'years_experience', 'discipline')
 
         def get_instance(self, instance_loader, row):
             return False
@@ -99,12 +99,19 @@ class DistilledStatementAdmin(ImportMixin, admin.ModelAdmin):
 @admin.register(StatementSorting)
 class StatementSortingAdmin(ExportMixin, admin.ModelAdmin):
     class StatementSortingResource(resources.ModelResource):
+        author_full_name = fields.Field()
+        statement_text = fields.Field()
+
         class Meta:
             model = StatementSorting
-            fields = ('author_full', 'statement', 'order')
+            fields = ('author_full_name', 'statement_text', 'order')
 
-        def dehydrate_author_full(self, p):
+        def dehydrate_author_full_name(self, p):
             return "%s %s" % (p.author.first_name, p.author.last_name)
+
+        def dehydrate_statement_text(self, s):
+            return str(s.statement)
+
 
     list_display = ('author', 'statement', 'order')
     resource_class = StatementSortingResource
@@ -113,15 +120,18 @@ class StatementSortingAdmin(ExportMixin, admin.ModelAdmin):
 @admin.register(StatementRating)
 class StatementRatingAdmin(ExportMixin, admin.ModelAdmin):
     class StatementRatingResource(resources.ModelResource):
+        author_full_name = fields.Field()
+        statement_text = fields.Field()
+
         class Meta:
             model = StatementRating
-            fields = ('author_full', 'statement', 'rating')
+            fields = ('author_full_name', 'statement_text', 'rating')
 
-        def dehydrate_author_full(self, p):
+        def dehydrate_author_full_name(self, p):
             return "%s %s" % (p.author.first_name, p.author.last_name)
 
         def dehydrate_statement_text(self, s):
-            return str(s.statment)
+            return str(s.statement)
 
     list_display = ('author', 'statement', 'rating')
     resource_class = StatementRatingResource

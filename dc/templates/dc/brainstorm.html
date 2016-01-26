@@ -21,23 +21,12 @@
 
     <div class="form-group form-actions">
         <input id="add_button"     tabindex="2" type="button" class="btn" ng-click="addGroup()" value="Add Statement" />
-        <input id="submit_button"  tabindex="1" type="submit" class="btn btn-primary" value="Submit" />
+        <input id="submit_button"  tabindex="1" type="submit" class="btn btn-primary" ng-click="submitGroup($event)" value="Submit" />
     </div>
 </form>
 
 
 <script>
-
-    document.getElementById('form_inputs').addEventListener('keypress', function(event) {
-        if (event.keyCode == 13) {
-            console.log('sdfasdfsd');
-            event.preventDefault();
-
-
-            var scope = angular.element(document.getElementById('ngDiv')).scope()
-            scope.addGroup();
-        }
-    });
 
 var app = angular.module( "brainstormingApp", [] ).config(function($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -62,6 +51,17 @@ app.controller(
 
             s_form.appendChild(n, document.getElementById("add_button")).focus();
         };
+
+        $scope.submitGroup = function(e) {
+            console.log('submitting');
+
+
+            if(!confirm('Have you checked that all statements you have generated covers all experiences of ‘exploitation of migrants working in low-skilled position’?')) {
+                e.preventDefault();
+            }
+
+
+        }
     }
 ]);
 

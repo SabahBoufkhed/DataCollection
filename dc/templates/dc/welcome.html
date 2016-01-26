@@ -28,7 +28,10 @@
     {% csrf_token %}
     <label>Password:<input type="password" name="password" /></label>
     <div class="checkbox">
-        <label><input type="checkbox" name="consent_checkbox" onchange="EnableSubmit(this)" />I consent</label>
+        <label><input type="checkbox" name="consent_checkbox" onchange="EnableSubmit(this)" />I agree</label>
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox" name="no_consent_checkbox" onchange="alert('We understand that you are not interested anymore in participating in our research. Thank you very much for your interest and time.') " />I do not agree</label>
     </div>
     <button type="submit" id="submit_button" disabled="true" class="btn btn-primary">Go</button>
 </form>

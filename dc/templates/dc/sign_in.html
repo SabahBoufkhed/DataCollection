@@ -5,7 +5,13 @@
     document.getElementById('sign_in').className = "active";
 </script>
 
-Welcome {{ user.first_name }}. Please fill in more details about yourself.
+
+Welcome {{user.first_name}},<br>
+Below are some information we need to collect for our analysis. Your personal details (name and email) will only be accessed by the main investigators. <br>
+Only aggregated data enabling anonymity would be used in our analysis.<br>
+Could you check the information pre-entered, correct them if need be and fill in the empty fields, please?<br>
+Thank you very much.<br>
+<br>
 
 <h1 class="page-header">Please Sign In</h1>
 <form action="{% url 'dc:sign_in' %}" class="form-horizontal form-group" method="post">

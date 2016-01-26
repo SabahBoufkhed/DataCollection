@@ -6,11 +6,21 @@ from django.template.loader import get_template
 
 from django.template import Context
 
+from django.utils.crypto import get_random_string
 
 gender_choices = (
     ('M', 'Male'),
     ('F', 'Female'),
-    ('N', 'N/A')
+    ('O', 'Other'),
+    ('N', "Don't want to answer")
+)
+
+main_discipline_choices = (
+    ('health', 'Health'),
+    ('economy', 'Economy/finance'),
+    ('sociology', 'Sociology/social work'),
+    ('law', 'Policy and Law'),
+    ('other', 'Other')
 )
 
 phase_choices = (
@@ -19,6 +29,7 @@ phase_choices = (
     ('grouping_enabled', 'Grouping Enabled'),
     ('rating_completed', 'Rating Completed')
 )
+
 
 page_main_url = "http://qba.pythonanywhere.com/"
 
@@ -30,25 +41,41 @@ class Participant(models.Model):
     date_added = models.DateTimeField(default=datetime.datetime.now)
 
     gender = models.CharField(max_length=1, choices=gender_choices, default='N')
-    age = models.IntegerField(blank=True, null=True)
-    position = models.CharField(blank=True, null=True, max_length=100)
-    type_experience = models.CharField(blank=True, max_length=100)
-    years_experience = models.IntegerField(blank=True, null=True)
+    age = models.IntegerField(default=0)
+    age.max_value=150
 
-    password = models.CharField(blank=True, max_length=100, default="veryDifficultPassphrase")
+    position = models.CharField(max_length=100)
+
+    type_experience = models.CharField(max_length=100)
+    type_experience.verbose_name = "Area of expertise related to exploitation (e.g. precarious," \
+                                   "vulnerable or low-paid migrant work; human trafficking, forced labour or slavery)"
+
+    discipline = models.CharField(max_length=100, choices=main_discipline_choices, default='other')
+    discipline.verbose_name = "Main discipline of expertise"
+
+    institution = models.CharField(max_length=100)
+    institution.verbose_name = "Institution or Organisation"
+
+    years_experience = models.PositiveSmallIntegerField()
+    years_experience.max_value=99
+
+    password = models.CharField(max_length=100, default=get_random_string(length=6))
 
     current_phase = models.CharField(max_length=50, choices=phase_choices, default='newly_added')
 
-    email = models.EmailField(null=True)
+    email = models.EmailField()
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.full_name()
 
     def __unicode__(self):
-        return self.first_name + " " + self.last_name
+        return self.full_name()
 
     def user_url(self):
         return page_main_url + "welcome/" + str(self.id) + "/"
+
+    def full_name(self):
+        return self.first_name + " " + self.last_name
 
     user_url.short_description = "User URL"
 
@@ -85,6 +112,7 @@ modules = (
     ('group', 'Group'),
     ('rate', 'Rate'),
     ('user_email_template', "User Email Template")
+
 )
 
 

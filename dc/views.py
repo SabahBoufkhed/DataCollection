@@ -10,9 +10,8 @@ from django.utils.html import format_html
 from .models import *
 from .forms import *
 
-import pprint
 import json
-
+import pprint
 
 def welcome(request, user_id=None):
     h = get_object_or_404(ModuleHeading, module_name='home')
@@ -85,6 +84,7 @@ def brainstorm(request):
     if 'user_id' not in request.session:
         return HttpResponseRedirect(reverse('dc:error'))
 
+
     p = get_object_or_404(Participant, pk=request.session['user_id'])
 
     if request.method == "GET":
@@ -98,8 +98,9 @@ def brainstorm(request):
     elif request.method == "POST":
         statements = request.POST.getlist('statement')
         for s in statements:
-            db_s = ParticipantStatement(text=s, author=p)
-            db_s.save()
+            if s:
+                db_s = ParticipantStatement(text=s, author=p)
+                db_s.save()
 
         p.current_phase = 'brainstorming_completed'
         p.save()
@@ -142,10 +143,10 @@ def rate_statements(request):
         return HttpResponseRedirect(reverse('dc:error'))
 
     p = get_object_or_404(Participant, pk=request.session['user_id'])
+    s = DistilledStatement.objects.all()
 
     if request.method == "GET":
         h = get_object_or_404(ModuleHeading, module_name='rate')
-        s = DistilledStatement.objects.all()
 
         r = {
             'heading': format_html(h.heading_content),
@@ -155,7 +156,14 @@ def rate_statements(request):
         return render(request, 'dc/rate.html', r)
 
     elif request.method == "POST":
-        for key in request.POST:
+
+        my_dict = dict(request.POST.items())
+        pprint.pprint(my_dict)
+        #
+        # if len(my_dict)-1 < s.count():
+
+
+        for key, rating in my_dict.items():
             if key == 'csrfmiddlewaretoken':
                 continue
 
@@ -165,6 +173,13 @@ def rate_statements(request):
 
             rating = StatementRating(author=p, statement=s, rating=rating)
             rating.save()
+
+
+        # for key in request.POST:
+        #     print(key + " " + request.POST[key])
+
+
+
 
         p.current_phase = 'rating_completed'
         p.save()
@@ -180,4 +195,4 @@ def thanks(request):
     print('user_id={}'.format(user_id))
     p = get_object_or_404(Participant, pk=request.session['user_id'])
 
-    return render(request, 'dc/thanks.html', {"name": str(p)})
+    return render(request, 'dc/thanks.html', {"first_name": p.first_name})
