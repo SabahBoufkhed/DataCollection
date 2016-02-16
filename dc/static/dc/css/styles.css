@@ -79,3 +79,7 @@ td, th {
 th:empty {
     border: 0;
 }
+
+//.control-label {
+//   font-weight: normal;
+//}

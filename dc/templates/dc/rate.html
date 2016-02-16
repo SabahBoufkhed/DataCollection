@@ -11,12 +11,12 @@
     function checkForm() {
 
         if($('.missing:checked').length != 0) {
-            alert("It seems that one of the statements have not been rated, please rate all the statements");
+            alert("It seems that at least one statement has not been rated. Could you rate the statement(s) where the ‘Missing’ option is selected, please?");
             return false;
         }
 
 
-        if(confirm('Have you checked that the ratings you have proposed corresponds to relative importance you gave to each statements?')) {
+        if(confirm("Have you checked that the ratings you have proposed represent the relative importance you give to each statement?")) {
             return true;
         } else {
             return false;
@@ -30,11 +30,11 @@
     <table>
         <tr>
             <th></th>
-            <th>Relatively unimportant</th>
-            <th>Somewhat important</th>
-            <th>Moderately important</th>
-            <th>Very important</th>
-            <th>Extremely important</th>
+            <th>Relatively unimportant (1)</th>
+            <th>Somewhat important (2)</th>
+            <th>Moderately important (3)</th>
+            <th>Very important (4)</th>
+            <th>Extremely important (5)</th>
             <th>Missing</th>
         </tr>
 

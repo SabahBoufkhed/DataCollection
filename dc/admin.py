@@ -16,7 +16,7 @@ class ParticipantAdmin(ImportExportMixin, admin.ModelAdmin):
     class ParticipantResource(resources.ModelResource):
         class Meta:
             model = Participant
-            fields = ('first_name', 'last_name', 'email', 'age', 'gender', 'type_experience', 'years_experience', 'discipline')
+            fields = ('first_name', 'last_name', 'email', 'age', 'gender', 'type_experience', 'years_experience', 'discipline', 'institution')
 
         def get_instance(self, instance_loader, row):
             return False
@@ -45,7 +45,7 @@ class ParticipantAdmin(ImportExportMixin, admin.ModelAdmin):
 
     fieldsets = [
         ('Basic', {'fields': ['first_name', 'last_name', 'current_phase', 'password']}),
-        ('Experience', {'fields': ['position', 'type_experience', 'years_experience']}),
+        ('Experience', {'fields': ['position', 'discipline', 'institution', 'type_experience', 'years_experience']}),
         ('More', {'fields': ['age', 'gender']}),
         ('Email', {'fields': ['email', 'user_url', 'user_email_message']})
     ]

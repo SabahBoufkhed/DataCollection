@@ -14,8 +14,8 @@
 <form action="{% url 'dc:brainstorm' %}" method="post">
     {% csrf_token %}
     <fieldset>
-    <div class="form-group" id="form_inputs">
-        <input class="form-control" type="text" name="statement">
+    <div class="form-group" id="form_inputs" ng-repeat="statementInput in statements">
+        <input class="form-control" type="text" name="statement" ng-keypress="onEnter($event)">
     </div>
     </fieldset>
 
@@ -36,31 +36,40 @@ var app = angular.module( "brainstormingApp", [] ).config(function($httpProvider
 app.controller(
     "brainstormingController", [ '$scope', '$http', '$log',
     function( $scope, $http, $log ) {
-        $scope.numStatements = 1;
+        $scope.statements = [""];
 
+        $scope.addGroup = function() {
+            $scope.statements.push($scope.statements.length);
+        }
+/*
         $scope.addGroup = function() {
             var s_form = document.getElementById("form_inputs");
 
-            var n = document.createElement("input");
-            n.name = "statement" // + $scope.numStatements;
-            n.className = "form-control"
-
+            $scope.n = document.createElement("input");
+            $scope.n.name = "statement" // + $scope.numStatements;
+            $scope.n.className = "form-control";
+            $scope.n.setAttribute('ng-keypress', "onEnter($event)");
             //$scope.numStatements++;
 
-            n.type = "text";
+            $scope.n.type = "text";
+            angular.element(s_form).append($scope.n)
 
-            s_form.appendChild(n, document.getElementById("add_button")).focus();
+            //s_form.appendChild(n, document.getElementById("add_button")).focus();
         };
-
+*/
         $scope.submitGroup = function(e) {
             console.log('submitting');
-
 
             if(!confirm('Have you checked that all statements you have generated covers all experiences of ‘exploitation of migrants working in low-skilled position’?')) {
                 e.preventDefault();
             }
+        }
 
-
+        $scope.onEnter = function(keyEvent) {
+            if (keyEvent.which === 13) {
+                keyEvent.preventDefault();
+                $scope.addGroup();
+            }
         }
     }
 ]);
