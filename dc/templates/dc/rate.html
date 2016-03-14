@@ -48,9 +48,12 @@
             <td><input type="radio" name="{{s.id}}" id="{{s.id}}-4" value="4" autocomplete="off"></td>
             <td><input type="radio" name="{{s.id}}" id="{{s.id}}-5" value="5" autocomplete="off"></td>
             <td><input type="radio" name="{{s.id}}" class="missing" id="{{s.id}}-missing" autocomplete="off" checked></td>
-
-            </div>
         </tr>
+        {% if forloop.counter|divisibleby:10 %}
+        <tr>
+            <td></td>
+        </tr>
+        {% endif %}
         {% endfor %}
 
     </table>

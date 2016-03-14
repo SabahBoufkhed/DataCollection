@@ -14,14 +14,14 @@
 <form action="{% url 'dc:brainstorm' %}" method="post">
     {% csrf_token %}
     <fieldset>
-    <div class="form-group" id="form_inputs" ng-repeat="statementInput in statements">
+    <div class="form-group" id="form_inputs" ng-repeat="statementInput in statements" set-focus="$last">
         <input class="form-control" type="text" name="statement" ng-keypress="onEnter($event)">
     </div>
     </fieldset>
 
     <div class="form-group form-actions">
-        <input id="add_button"     tabindex="2" type="button" class="btn" ng-click="addGroup()" value="Add Statement" />
-        <input id="submit_button"  tabindex="1" type="submit" class="btn btn-primary" ng-click="submitGroup($event)" value="Submit" />
+        <input id="add_button"     tabindex="2" type="button" class="btn btn-primary" ng-click="addGroup()" value="Add Statement" />
+        <input id="submit_button"  tabindex="1" type="submit" class="btn" ng-click="submitGroup($event)" value="Submit" />
     </div>
 </form>
 
@@ -33,6 +33,15 @@ var app = angular.module( "brainstormingApp", [] ).config(function($httpProvider
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 });
 
+app.directive('setFocus', function(){
+  return {
+      scope: {setFocus: '='},
+      link: function(scope, element){
+            element[0].children[0].focus();
+      }
+  };
+});
+
 app.controller(
     "brainstormingController", [ '$scope', '$http', '$log',
     function( $scope, $http, $log ) {
@@ -40,23 +49,9 @@ app.controller(
 
         $scope.addGroup = function() {
             $scope.statements.push($scope.statements.length);
+
         }
-/*
-        $scope.addGroup = function() {
-            var s_form = document.getElementById("form_inputs");
 
-            $scope.n = document.createElement("input");
-            $scope.n.name = "statement" // + $scope.numStatements;
-            $scope.n.className = "form-control";
-            $scope.n.setAttribute('ng-keypress', "onEnter($event)");
-            //$scope.numStatements++;
-
-            $scope.n.type = "text";
-            angular.element(s_form).append($scope.n)
-
-            //s_form.appendChild(n, document.getElementById("add_button")).focus();
-        };
-*/
         $scope.submitGroup = function(e) {
             console.log('submitting');
 

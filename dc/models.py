@@ -46,18 +46,26 @@ class Participant(models.Model):
 
     position = models.CharField(max_length=100)
 
-    type_experience = models.CharField(max_length=100)
-    type_experience.verbose_name = "Area of expertise related to exploitation" \
-                                   " (e.g. precarious," \
-                                   "vulnerable or low-paid migrant work; human trafficking, forced labour or slavery)"
+    type_experience = models.CharField(max_length=100, blank=True)
+    type_experience.verbose_name = "Area of expertise related to exploitation " \
+                                   "(for example: precarious, vulnerable, unfree, low-paid or migrant work; " \
+                                   "forced labour, modern slavery or human trafficking, ...)"
+
 
     discipline = models.CharField(max_length=100, choices=main_discipline_choices, default='other')
     discipline.verbose_name = "Main discipline of expertise"
 
-    institution = models.CharField(max_length=100)
+    other_discipline = models.CharField(max_length=100, blank=True)
+    other_discipline.verbose_name = "If Other, please specify:..."
+
+    institution = models.CharField(max_length=100, blank=True)
     institution.verbose_name = "Institution or Organisation"
 
-    years_experience = models.IntegerField()
+    country = models.CharField(max_length=200, blank=True)
+    country.verbose_name = "Country"
+
+
+    years_experience = models.IntegerField(blank=True)
     years_experience.verbose_name= "Years of experience in the field related to ‘exploitation’"
 
     password = models.CharField(max_length=100, default=get_random_string(length=6))
