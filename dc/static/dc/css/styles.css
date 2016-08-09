@@ -86,3 +86,7 @@ th:empty {
 
 .focus {
 }
+
+.groups .layer input {
+    color: black;
+}

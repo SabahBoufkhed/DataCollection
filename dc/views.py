@@ -84,7 +84,6 @@ def brainstorm(request):
     if 'user_id' not in request.session:
         return HttpResponseRedirect(reverse('dc:error'))
 
-
     p = get_object_or_404(Participant, pk=request.session['user_id'])
 
     if request.method == "GET":
@@ -131,8 +130,10 @@ def group_statements(request):
 
         for group in d:
             for statement in group:
+                group_name = statement['group_name']
                 s = get_object_or_404(DistilledStatement, pk=statement['id'])
-                grouping = StatementSorting(author=p, order=group_number, statement=s)
+
+                grouping = StatementSorting(author=p, order=group_number, statement=s, group_name=group_name)
                 grouping.save()
             group_number += 1
         return HttpResponseRedirect(reverse('dc:rate_statements'))

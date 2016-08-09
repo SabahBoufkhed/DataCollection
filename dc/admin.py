@@ -104,7 +104,7 @@ class StatementSortingAdmin(ExportMixin, admin.ModelAdmin):
 
         class Meta:
             model = StatementSorting
-            fields = ('author_full_name', 'statement_text', 'order')
+            fields = ('author_full_name', 'statement_text', 'order', 'group_name')
 
         def dehydrate_author_full_name(self, p):
             return "%s %s" % (p.author.first_name, p.author.last_name)
@@ -112,8 +112,7 @@ class StatementSortingAdmin(ExportMixin, admin.ModelAdmin):
         def dehydrate_statement_text(self, s):
             return str(s.statement)
 
-
-    list_display = ('author', 'statement', 'order')
+    list_display = ('author', 'statement', 'order', 'group_name')
     resource_class = StatementSortingResource
 
 

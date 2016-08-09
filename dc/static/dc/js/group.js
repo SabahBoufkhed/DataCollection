@@ -8,8 +8,6 @@ Sortable.create(source_group, {
         group: "grouping",
         animation: 0,
         sort: false,
-
-
     });
 });
 
@@ -31,8 +29,10 @@ app.controller(
             newGroup.className = "layer"
 
             var groupTitle = document.createElement("div");
-            groupTitle.innerHTML = "Group " + $scope.numGroups;
             groupTitle.className = "layer title";
+//            groupTitle.innerHTML = "Group " + $scope.numGroups;
+            groupTitle.innerHTML = `<input type="text" value="Group ${$scope.numGroups}" id="group-${$scope.numGroups}_title">`
+
             newGroup.appendChild(groupTitle);
 
             var groupEl = document.createElement("ul");
@@ -64,8 +64,10 @@ app.controller(
 
             [].every.call(groups.children, function(group) {
                 var g = [];
+
+                let group_name = group.getElementsByTagName('input')[0].value;
                 [].forEach.call(group.getElementsByTagName('li'), function(element) {
-                    g.push({ 'name': element.innerHTML, 'id': element.id});
+                    g.push({ 'name': element.innerHTML, 'id': element.id, 'group_name': group_name});
                 });
 
                 if(g.length == 0) {

@@ -33,6 +33,7 @@ phase_choices = (
 
 page_main_url = "http://qba.pythonanywhere.com/"
 
+
 class Participant(models.Model):
     id = models.CharField(primary_key=True, default=str(uuid.uuid4()), unique=True, editable=False, blank=True, max_length=36)
 
@@ -51,7 +52,6 @@ class Participant(models.Model):
                                    "(for example: precarious, vulnerable, unfree, low-paid or migrant work; " \
                                    "forced labour, modern slavery or human trafficking, ...)"
 
-
     discipline = models.CharField(max_length=100, choices=main_discipline_choices, default='other')
     discipline.verbose_name = "Main discipline of expertise"
 
@@ -63,7 +63,6 @@ class Participant(models.Model):
 
     country = models.CharField(max_length=200, blank=True)
     country.verbose_name = "Country"
-
 
     years_experience = models.IntegerField(blank=True)
     years_experience.verbose_name= "Years of experience in the field related to ‘exploitation’"
@@ -113,6 +112,7 @@ class StatementSorting(models.Model):
     author = models.ForeignKey(Participant)
     statement = models.ForeignKey(DistilledStatement)
     order = models.IntegerField()
+    group_name = models.TextField()
 
 
 modules = (
