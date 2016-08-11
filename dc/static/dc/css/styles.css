@@ -92,11 +92,11 @@ th:empty {
 }
 
 #rating_table tr th {
-    background-color: #aaa;
+    background-color: #fff;
 }
 
 .floatThead-table th {
-    background-color: #aaa;
+    background-color: #fff;
 }
 
 #rating_table tr:nth-child(odd) {
