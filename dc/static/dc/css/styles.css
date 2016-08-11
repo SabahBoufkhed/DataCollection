@@ -90,3 +90,15 @@ th:empty {
 .groups .layer input {
     color: black;
 }
+
+#rating_table tr th {
+    background-color: #aaa;
+}
+
+.floatThead-table th {
+    background-color: #aaa;
+}
+
+#rating_table tr:nth-child(odd) {
+    background-color: #ecf7ff;
+}

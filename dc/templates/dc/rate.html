@@ -22,12 +22,12 @@
             return false;
         }
     }
-
 </script>
 <form name="ratingForm" action="{% url 'dc:rate_statements' %}" method="post">
     {% csrf_token %}
 
-    <table>
+    <table id="rating_table">
+        <thead>
         <tr>
             <th></th>
             <th>Relatively unimportant (1)</th>
@@ -37,7 +37,7 @@
             <th>Extremely important (5)</th>
             <th>Missing</th>
         </tr>
-
+        </thead>
 
         {% for s in statements %}
         <tr>
@@ -61,5 +61,9 @@
     <input type="submit" class="btn btn-primary" value="Submit" onclick="return checkForm()"/>
 </form>
 
+<script>
+    var t = $('#rating_table');
+    t.floatThead({ 'top': 50 });
+</script>
 
 {% endblock %}
